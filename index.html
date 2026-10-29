@@ -4,44 +4,74 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MapaZonas</title>
-
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    crossorigin=""
-  >
-
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <style>
-    html,
-    body {
-      height: 100%;
-      margin: 0;
+    html, body { height: 100%; margin: 0; }
+    #map { width: 100%; height: 100vh; }
+    .province-label {
+      background: transparent; border: 0; color: #1f2937; font-size: 12px;
+      font-weight: 700; line-height: 1; text-align: center; white-space: nowrap;
+      text-shadow: -1px -1px #fff, 1px -1px #fff, -1px 1px #fff, 1px 1px #fff;
     }
-
-    #map {
-      width: 100%;
-      height: 100vh;
+    .store-marker {
+      align-items: center; background: #2563eb; border: 3px solid #fff;
+      border-radius: 50%; box-shadow: 0 1px 5px rgba(0,0,0,.35); color: #fff;
+      display: flex; font-size: 13px; font-weight: 700; justify-content: center;
     }
   </style>
 </head>
 <body>
-  <main id="map" aria-label="Mapa interactivo"></main>
-
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    crossorigin=""
-  ></script>
-
+  <main id="map" aria-label="Tiendas por provincia"></main>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script>
-    // Vista inicial: España. Podremos ajustarla cuando definamos las zonas.
     const map = L.map('map').setView([40.4168, -3.7038], 6);
-
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    // Los indicadores y demás capas se añadirán aquí más adelante.
+    const provinces = [
+      ['A Coruña',2,43.15,-8.55], ['Albacete',1,38.99,-1.86],
+      ['Alicante',2,38.35,-0.49], ['Almería',1,36.84,-2.46],
+      ['Asturias',1,43.36,-5.85], ['Badajoz',1,38.88,-6.97],
+      ['Barcelona',8,41.67,2.00], ['Burgos',1,42.34,-3.70],
+      ['Cáceres',1,39.52,-6.37], ['Cádiz',4,36.52,-5.85],
+      ['Cantabria',1,43.18,-3.80], ['Castellón',1,40.20,-0.15],
+      ['Ciudad Real',1,39.00,-3.93], ['Córdoba',2,37.90,-4.78],
+      ['Girona',1,42.12,2.75], ['Granada',2,37.20,-3.60],
+      ['Guipúzcoa',2,43.15,-2.20], ['Huelva',1,37.60,-6.90],
+      ['Islas Baleares',3,39.60,2.90], ['Jaén',1,37.78,-3.80],
+      ['Las Palmas',1,28.15,-15.45], ['León',1,42.60,-5.57],
+      ['Lleida',1,41.62,0.62], ['Madrid',9,40.42,-3.70],
+      ['Málaga',2,36.82,-4.75], ['Murcia',2,37.99,-1.13],
+      ['Navarra',2,42.75,-1.65], ['Ourense',1,42.25,-7.75],
+      ['Pontevedra',1,42.43,-8.65], ['Salamanca',2,40.75,-6.00],
+      ['Santa Cruz de Tenerife',4,28.30,-16.60], ['Sevilla',3,37.39,-5.98],
+      ['Tarragona',1,41.12,1.10], ['Toledo',2,39.86,-4.02],
+      ['Valencia',1,39.47,-0.38], ['Valladolid',1,41.65,-4.72],
+      ['Vizcaya',2,43.25,-2.93], ['Zaragoza',1,41.65,-0.88]
+    ];
+
+    provinces.forEach(([name, count, lat, lng]) => {
+      const size = 24 + count * 4;
+      L.marker([lat, lng], {
+        icon: L.divIcon({
+          className: '',
+          html: '<div class="store-marker" style="width:'+size+'px;height:'+size+'px">'+count+'</div>',
+          iconSize: [size, size], iconAnchor: [size/2, size/2]
+        })
+      }).bindTooltip(name + ': ' + count + (count === 1 ? ' tienda' : ' tiendas'), {
+        direction: 'top', offset: [0, -size/2]
+      }).addTo(map);
+
+      L.marker([lat + 0.38, lng], {
+        icon: L.divIcon({
+          className: 'province-label', html: name,
+          iconSize: [180, 20], iconAnchor: [90, 10]
+        }),
+        interactive: false
+      }).addTo(map);
+    });
   </script>
 </body>
 </html>
