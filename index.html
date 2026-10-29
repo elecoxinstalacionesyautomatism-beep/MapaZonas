@@ -24,6 +24,11 @@
       line-height: 1;
     }
 
+    .custom-marker-icon {
+      background: transparent !important;
+      border: 0 !important;
+    }
+
     .province-label {
       background: transparent; border: 0; color: #1f2937; font-size: 12px;
       font-weight: 700; line-height: 1; text-align: center; white-space: nowrap;
@@ -81,10 +86,10 @@
 
       L.marker([lat, lng], {
         icon: L.divIcon({
-          className: '',
+          className: 'custom-marker-icon',
           html: '<div class="top-semicircle" style="width:' + size + 'px;height:' + (size / 2) + 'px">' + count + '</div>',
-          iconSize: [size + 6, size / 2 + 3],
-          iconAnchor: [(size + 6) / 2, size / 2 + 3]
+          iconSize: [size, size / 2],
+          iconAnchor: [size / 2, size / 2]
         })
       })
         .bindTooltip('<strong>' + name + '</strong><br>' + count + (count === 1 ? ' tienda' : ' tiendas'), {
