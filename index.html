@@ -14,9 +14,16 @@
       text-shadow: -1px -1px #fff, 1px -1px #fff, -1px 1px #fff, 1px 1px #fff;
     }
     .store-marker {
-      align-items: center; background: #2563eb; border: 3px solid #fff;
-      border-radius: 50%; box-shadow: 0 1px 5px rgba(0,0,0,.35); color: #fff;
-      display: flex; font-size: 13px; font-weight: 700; justify-content: center;
+      background: #2563eb;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 1px 5px rgba(0,0,0,.35);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+      padding: 7px;
+      text-align: center;
     }
   </style>
 </head>
@@ -53,21 +60,37 @@
     ];
 
     provinces.forEach(([name, count, lat, lng]) => {
-      const size = 24 + count * 4;
+      const radius = 8 + count * 2;
+
+      L.circleMarker([lat, lng], {
+        radius,
+        color: '#ffffff',
+        weight: 3,
+        fillColor: '#2563eb',
+        fillOpacity: 0.95
+      })
+        .bindTooltip('<strong>' + name + '</strong><br>' + count + (count === 1 ? ' tienda' : ' tiendas'), {
+          direction: 'top',
+          sticky: true
+        })
+        .addTo(map);
+
       L.marker([lat, lng], {
         icon: L.divIcon({
           className: '',
-          html: '<div class="store-marker" style="width:'+size+'px;height:'+size+'px">'+count+'</div>',
-          iconSize: [size, size], iconAnchor: [size/2, size/2]
-        })
-      }).bindTooltip(name + ': ' + count + (count === 1 ? ' tienda' : ' tiendas'), {
-        direction: 'top', offset: [0, -size/2]
+          html: '<div style="color:#fff;font-weight:700;text-align:center;line-height:1;">' + count + '</div>',
+          iconSize: [24, 20],
+          iconAnchor: [12, 10]
+        }),
+        interactive: false
       }).addTo(map);
 
-      L.marker([lat + 0.38, lng], {
+      L.marker([lat + 0.42, lng], {
         icon: L.divIcon({
-          className: 'province-label', html: name,
-          iconSize: [180, 20], iconAnchor: [90, 10]
+          className: 'province-label',
+          html: name,
+          iconSize: [180, 20],
+          iconAnchor: [90, 10]
         }),
         interactive: false
       }).addTo(map);
