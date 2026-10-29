@@ -96,12 +96,11 @@
       ['Zaragoza',2,41.65,-0.88]
     ];
     const employees = {
-      'A Coruña': 1, 'Alicante': 5, 'Asturias': 3, 'Barcelona': 11,
-      'Guipúzcoa': 2, 'Jaén': 2, 'La Rioja': 4, 'León': 1,
-      'Madrid': 117, 'Salamanca': 1, 'Valencia': 3, 'Valladolid': 1,
-      'Pontevedra': 4, 'Vizcaya': 2, 'Zaragoza': 9
+      'A Coruña': 2, 'Alicante': 5, 'Asturias': 2, 'Barcelona': 7,
+      'Guipúzcoa': 0, 'Jaén': 0, 'La Rioja': 7, 'León': 1,
+      'Madrid': 26, 'Salamanca': 1, 'Valencia': 2, 'Valladolid': 1,
+      'Pontevedra': 1, 'Vizcaya': 2, 'Zaragoza': 7
     };
-
     const maxStores = Math.max(...provinces.map(([, count]) => count));
     const maxEmployees = Math.max(...Object.values(employees));
 
