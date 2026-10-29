@@ -29,7 +29,6 @@
       box-sizing: border-box;
       display: flex;
       justify-content: center;
-      width: 100%;
     }
 
     .marker-top {
@@ -101,26 +100,35 @@
       'Pontevedra': 4, 'Vizcaya': 2, 'Zaragoza': 9
     };
 
+    const maxStores = Math.max(...provinces.map(([, count]) => count));
+    const maxEmployees = Math.max(...Object.values(employees));
+
     provinces.forEach(([name, count, lat, lng]) => {
       const employeeCount = employees[name] || 0;
-      const size = 24 + Math.max(count, Math.min(employeeCount, 20)) * 4;
-      const hasBottom = employeeCount > 0;
-      const totalHeight = hasBottom ? size : size / 2;
-      const halfHeight = totalHeight / (hasBottom ? 2 : 1);
+      const topSize = 24 + (count / maxStores) * 44;
+      const bottomSize = employeeCount > 0
+        ? 24 + (employeeCount / maxEmployees) * 44
+        : 0;
+      const markerWidth = Math.max(topSize, bottomSize);
+      const topHeight = topSize / 2;
+      const bottomHeight = bottomSize / 2;
+      const totalHeight = topHeight + bottomHeight;
 
       L.marker([lat, lng], {
         icon: L.divIcon({
           className: 'custom-marker-icon',
-          html: '<div class="combined-marker" style="width:' + size + 'px;height:' + totalHeight + 'px">' +
-            '<div class="marker-half marker-top" style="height:' + halfHeight + 'px">' + count + '</div>' +
-            (hasBottom ? '<div class="marker-half marker-bottom" style="height:' + halfHeight + 'px">' + employeeCount + '</div>' : '') +
+          html: '<div class="combined-marker" style="width:' + markerWidth + 'px;height:' + totalHeight + 'px">' +
+            '<div class="marker-half marker-top" style="width:' + topSize + 'px;height:' + topHeight + 'px">' + count + '</div>' +
+            (employeeCount > 0
+              ? '<div class="marker-half marker-bottom" style="width:' + bottomSize + 'px;height:' + bottomHeight + 'px">' + employeeCount + '</div>'
+              : '') +
             '</div>',
-          iconSize: [size, totalHeight],
-          iconAnchor: [size / 2, totalHeight]
+          iconSize: [markerWidth, totalHeight],
+          iconAnchor: [markerWidth / 2, totalHeight]
         })
       })
         .bindTooltip('<strong>' + name + '</strong><br>Tiendas: ' + count +
-          (hasBottom ? '<br>Trabajadores: ' + employeeCount : ''), {
+          (employeeCount > 0 ? '<br>Trabajadores: ' + employeeCount : ''), {
           direction: 'top',
           sticky: true
         })
